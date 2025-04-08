@@ -15,7 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
             $imgSrc = "";
             foreach ($payment_methods as $idTcPayment){
                 switch (intval($idTcPayment)){
-                    case 7: $imgSrc = "itau";break;
                     case 14: $imgSrc = "peela";break;
                     case 21: $imgSrc = "hsbc";break;
                     case 22: $imgSrc = "bradesco";break;

@@ -72,7 +72,7 @@ if (!defined('ABSPATH')) {
             <label for="wc-yapay_intermediador-cc-card-expiry">
                 <?php _e('Data de Expiração', 'woocommerce-wc-yapay_intermediador-cc'); ?> <span class="required">*</span>
             </label>
-            <input id="wc-yapay_intermediador-cc-card-expiry" name="wc-yapay_intermediador-cc_card_expiry" class="input-text wc-credit-card-form-card-expiry" type="text" autocomplete="off" placeholder="<?php _e('MM/AA', 'woocommerce-wc-yapay_intermediador-cc'); ?>" maxlength="7" style="font-size: 1.5em; padding: 8px;" />
+            <input id="wc-yapay_intermediador-cc-card-expiry" name="wc-yapay_intermediador-cc_card_expiry" class="input-text" type="text" autocomplete="off" placeholder="<?php _e('MM/AA', 'woocommerce-wc-yapay_intermediador-cc'); ?>" maxlength="7" style="font-size: 1.5em; padding: 8px;" />
         </p>
         <p class="form-row form-row-last">
             <label for="wc-yapay_intermediador-cc-card-cvc"><?php _e('Código de Segurança', 'woocommerce-wc-yapay_intermediador-cc'); ?> <span class="required">*</span></label>
