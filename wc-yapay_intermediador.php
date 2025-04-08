@@ -5,7 +5,7 @@
  * Description: Intermediador de pagamento Vindi para a plataforma WooCommerce.
  * Author: Integração Vindi Intermediador
  * Author URI: https://vindi.com.br/
- * Version: 0.7.8
+ * Version: 0.7.9
  * Text Domain: vindi-pagamento
  */
 
@@ -25,7 +25,6 @@ function wc_gateway_yapay_intermediador_init() {
     // If we made it this far, then include our Gateway Class
     include_once( 'class-wc-yapay_intermediador-creditcard-gateway.php' );
     include_once( 'class-wc-yapay_intermediador-bankslip-gateway.php' );
-    include_once( 'class-wc-yapay_intermediador-tef-gateway.php' );
     include_once( 'class-wc-yapay_intermediador-pix-gateway.php' );
     include_once( 'class-wc-yapay_intermediador-bolepix-gateway.php' );
 
@@ -34,7 +33,6 @@ function wc_gateway_yapay_intermediador_init() {
     add_filter( 'woocommerce_payment_gateways', 'wc_yapay_intermediador_gateway_add' );
     function wc_yapay_intermediador_gateway_add( $methods ) {
         $methods[] = 'WC_Yapay_Intermediador_Creditcard_Gateway';
-        $methods[] = 'WC_Yapay_Intermediador_Tef_Gateway';
         $methods[] = 'WC_Yapay_Intermediador_Bankslip_Gateway';
         $methods[] = 'WC_Yapay_Intermediador_Pix_Gateway';
         $methods[] = 'WC_Yapay_Intermediador_Bolepix_Gateway';
@@ -49,7 +47,6 @@ function html_log_page() {
 function wc_gateway_yapay_intermediador_action_links( $links ) {
     $plugin_links = array(
         '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_yapay_intermediador_creditcard_gateway' ) . '">' . __( 'Config. Cartão', 'wc-yapay_intermediador-cc' ) . '</a>',
-        '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_yapay_intermediador_tef_gateway' ) . '">' . __( 'Config. TEF', 'wc-yapay_intermediador-tef' ) . '</a>',
         '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_yapay_intermediador_bankslip_gateway' ) . '">' . __( 'Config. Boleto', 'wc-yapay_intermediador-bs' ) . '</a>',
         '<a href="' . admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_yapay_intermediador_pix_gateway' ) . '">' . __( 'Config. Pix', 'wc-yapay_intermediador-pix' ) . '</a>',
     );
@@ -201,7 +198,6 @@ function wc_yapay_intermediador_notification() {
             switch ($paymentOrder) {
                 case "wc_yapay_intermediador_bs": $tcPayment  = new WC_Yapay_Intermediador_Bankslip_Gateway(); break;
                 case "wc_yapay_intermediador_cc": $tcPayment  = new WC_Yapay_Intermediador_Creditcard_Gateway(); break;
-                case "wc_yapay_intermediador_tef": $tcPayment = new WC_Yapay_Intermediador_Tef_Gateway(); break;
                 case "wc_yapay_intermediador_pix": $tcPayment = new WC_Yapay_Intermediador_Pix_Gateway(); break;
                 case "wc_yapay_intermediador_bolepix": $tcPayment = new WC_Yapay_Intermediador_Bolepix_Gateway(); break;
                 default: $tcPayment                           = new WC_Yapay_Intermediador_Creditcard_Gateway();break;
@@ -408,7 +404,6 @@ function sendRastreioYapay() {
     switch ($paymentOrder) {
         case "wc_yapay_intermediador_bs": $tcConfig  = new WC_Yapay_Intermediador_Bankslip_Gateway(); break;
         case "wc_yapay_intermediador_cc": $tcConfig  = new WC_Yapay_Intermediador_Creditcard_Gateway(); break;
-        case "wc_yapay_intermediador_tef": $tcConfig = new WC_Yapay_Intermediador_Tef_Gateway(); break;
         case "wc_yapay_intermediador_pix": $tcConfig = new WC_Yapay_Intermediador_Pix_Gateway(); break;
         case "wc_yapay_intermediador_bolepix": $tcConfig = new WC_Yapay_Intermediador_Bolepix_Gateway(); break;
         default: $tcConfig                           = new WC_Yapay_Intermediador_Creditcard_Gateway();break;

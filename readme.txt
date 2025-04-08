@@ -3,7 +3,7 @@ Contributors: Integração Vindi, aguiart0, apiki
 Tags: woocommerce, vindi, intermediador, Vindi Pagamento, payment
 Requires at least: 3.5
 Tested up to: 6.4
-Stable tag: 0.7.8
+Stable tag: 0.7.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,11 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 2. Página de configuração do plugin
 
 == Changelog ==
+= 0.7.9 = 03/12/2024
+* Feature: Transferência bancária removida.
+* Fix: Correção do regex visa.
+* Fix: Remoção da classe nativa WC do cartão de credito
+
 = 0.7.8 = 03/12/2024
 * Fix: Ajuste tamanho do QrCode
 

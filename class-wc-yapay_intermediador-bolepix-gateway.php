@@ -169,7 +169,7 @@ class WC_Yapay_Intermediador_Bolepix_Gateway extends WC_Payment_Gateway {
         
         $params["token_account"] = $this->get_option("token_account");
         $params["finger_print"] = $_POST["finger_print"];
-		    $params['transaction[free]']= "WOOCOMMERCE_INTERMEDIADOR_v0.7.8";
+		    $params['transaction[free]']= "WOOCOMMERCE_INTERMEDIADOR_v0.7.9";
         $params["customer[name]"] = substr($_POST["billing_first_name"] . " " . $_POST["billing_last_name"], 0 , 50);
         $params["customer[cpf]"] = $_POST["billing_cpf"];
 
@@ -186,8 +186,16 @@ class WC_Yapay_Intermediador_Bolepix_Gateway extends WC_Payment_Gateway {
 
         $params["customer[inscricao_municipal]"] = "";
         $params["customer[email]"] = $_POST["billing_email"];
-        $params["customer[contacts][][type_contact]"] = "H";
-        $params["customer[contacts][][number_contact]"] = $_POST["billing_phone"];
+        $params["customer[contacts][0][type_contact]"] = "H";
+        $params["customer[contacts][0][number_contact]"] = $_POST["billing_phone"];
+        if ($_POST["billing_phone"] == "" && $_POST["billing_cellphone"] !== "") {
+            $params["customer[contacts][0][number_contact]"] = $_POST["billing_cellphone"];
+        }
+        if ($_POST["billing_cellphone"] != "") {
+            $params["customer[contacts][1][type_contact]"] = "M";
+            $params["customer[contacts][1][number_contact]"] = $_POST["billing_cellphone"];
+        }
+
 
         $params["customer[addresses][0][type_address]"] = "B";
         $params["customer[addresses][0][postal_code]"] = $_POST["billing_postcode"];
