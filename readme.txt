@@ -54,6 +54,7 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 = 0.7.8 = 03/12/2024
 * Fix: Ajuste tamanho do QrCode
 
+
 = 0.7.7 = 25/10/2024
 * Fix: Correção da requisição das parcelas
 
