@@ -5,7 +5,7 @@
  * Description: Intermediador de pagamento Vindi para a plataforma WooCommerce.
  * Author: Integração Vindi Intermediador
  * Author URI: https://vindi.com.br/
- * Version: 0.7.9
+ * Version: 0.8.0
  * Text Domain: vindi-pagamento
  */
 
