@@ -476,7 +476,6 @@ function wc_yapay_intermediador_version_check() {
             $logger = new WC_Logger();
             $logger->clear('yapay-intermediador-request-response');
             $logger->clear('yapay-intermediador-notification');
-            $logger->add('yapay-intermediador-system', 'Logs limpos durante atualização para a versão ' . $current_version);
         }
         
         update_option('wc_yapay_intermediador_version', $current_version);
