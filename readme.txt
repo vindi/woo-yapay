@@ -3,7 +3,7 @@ Contributors: Integração Vindi, aguiart0, apiki
 Tags: woocommerce, vindi, intermediador, Vindi Pagamento, payment
 Requires at least: 3.5
 Tested up to: 6.8
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -51,6 +51,9 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 2. Página de configuração do plugin
 
 == Changelog ==
+= 0.8.1 = 02/06/2025
+* Security: Implementação da sanitização de dados nos logs de requisição
+
 = 0.8.0 = 23/04/2025
 * Fix: Testado na nova versão do Wordpress
 

@@ -5,7 +5,7 @@
  * Description: Intermediador de pagamento Vindi para a plataforma WooCommerce.
  * Author: Integração Vindi Intermediador
  * Author URI: https://vindi.com.br/
- * Version: 0.8.0
+ * Version: 0.8.1
  * Text Domain: vindi-pagamento
  */
 
@@ -466,3 +466,21 @@ function check_plugin_dependencies() {
 }
 
 add_action( 'admin_init', 'check_plugin_dependencies' );
+
+function wc_yapay_intermediador_version_check() {
+    $current_version = '0.8.1';
+    $stored_version = get_option('wc_yapay_intermediador_version');
+    
+    if ($stored_version !== $current_version) {
+        if (class_exists('WC_Logger')) {
+            $logger = new WC_Logger();
+            $logger->clear('yapay-intermediador-request-response');
+            $logger->clear('yapay-intermediador-notification');
+            $logger->add('yapay-intermediador-system', 'Logs limpos durante atualização para a versão ' . $current_version);
+        }
+        
+        update_option('wc_yapay_intermediador_version', $current_version);
+    }
+}
+
+add_action('init', 'wc_yapay_intermediador_version_check', 5);
