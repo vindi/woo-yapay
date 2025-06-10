@@ -51,7 +51,7 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 2. Página de configuração do plugin
 
 == Changelog ==
-= 0.8.2 = 02/06/2025
+= 0.8.2 = 10/06/2025
 * Fix: Melhoria no fluxo de pagamento via cartão de credito.
 
 = 0.8.1 = 02/06/2025
