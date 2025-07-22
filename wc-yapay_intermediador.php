@@ -451,7 +451,7 @@ function yapay_enqueue_scripts() {
         wp_enqueue_script(
             'yapay_intermediador-fingerprint',
             'https://static.traycheckout.com.br/js/finger_print.js',
-            ['jquery', 'yapay_intermediador-checkout'],
+            ['jquery', 'yapay_intermediador-checkout-credit'],
         );
     }
 }
