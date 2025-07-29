@@ -3,7 +3,7 @@ Contributors: Integração Vindi, aguiart0, apiki
 Tags: woocommerce, vindi, intermediador, Vindi Pagamento, payment
 Requires at least: 3.5
 Tested up to: 6.8
-Stable tag: 0.8.2
+Stable tag: 0.8.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,8 +31,14 @@ O Vindi Pagamento é compatível desde a versão 2.x até 3.x do WooCommerce.
 
 = Dependência =
 
-Este plugin depende dos campos do plugin [WooCommerce Extra Checkout Fields for Brazil](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/), desta forma é possível enviar os campos de "CPF", "número do endereço" e "bairro" (para o Checkout Transparente é obrigatório o uso deste plugin).
+Este plugin requer os seguintes campos no checkout para funcionar corretamente:
 
+- billing_cpf
+- billing_cnpj
+- billing_number
+- billing_persontype
+
+Recomendamos o uso do plugin [WooCommerce Extra Checkout Fields for Brazil](https://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/) ou outro plugin que adicione esses campos ao checkout. Certifique-se de que os campos existam para o funcionamento adequado.
 
 == Installation ==
 
@@ -51,6 +57,10 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 2. Página de configuração do plugin
 
 == Changelog ==
+= 0.8.3 = 29/07/2025
+* Change: Remoção da verificação obrigatória do plugin "Extra Checkout Fields for Brazil"
+* Docs: Atualização da seção de dependência no readme com instruções sobre campos obrigatórios
+
 = 0.8.2 = 10/06/2025
 * Fix: Melhoria no fluxo de pagamento via cartão de credito.
 
@@ -196,27 +206,3 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 * Ajustar input do ano do cartão de crédito para dois digitos, ficando MM / YY.
 * Ajuste no checkout, não será permitido digitar letras no campo de NÚMERO DO CARTÃO.
 * Ajuste no checkout, não será permitido digitar números no campo de NOME DO CARTÃO.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

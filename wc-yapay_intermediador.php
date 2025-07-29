@@ -5,7 +5,7 @@
  * Description: Intermediador de pagamento Vindi para a plataforma WooCommerce.
  * Author: Integração Vindi Intermediador
  * Author URI: https://vindi.com.br/
- * Version: 0.8.2
+ * Version: 0.8.3
  * Text Domain: vindi-pagamento
  */
 
@@ -457,18 +457,8 @@ function yapay_enqueue_scripts() {
 }
 add_action('init', 'yapay_enqueue_scripts');
 
-function check_plugin_dependencies() {
-    if ( !class_exists( 'Extra_Checkout_Fields_For_Brazil' ) ) {
-        add_action( 'admin_notices', function() {
-            echo '<div class="error"><p><strong>Brazilian Market on WooCommerce</strong> não está ativo. Certifique-se de ativá-lo para usar as funcionalidades específicas.</p></div>';
-        });
-    }
-}
-
-add_action( 'admin_init', 'check_plugin_dependencies' );
-
 function wc_yapay_intermediador_version_check() {
-    $current_version = '0.8.2';
+    $current_version = '0.8.3';
     $stored_version = get_option('wc_yapay_intermediador_version');
     
     if ($stored_version !== $current_version) {
