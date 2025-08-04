@@ -59,6 +59,7 @@ Para dúvidas envie um e-mail para nosso time de Integração: integracao@yapay.
 == Changelog ==
 = 0.8.3 = 04/08/2025
 * Fix: Melhoria na exibição do fieldset.
+* Fix: Correção nas compras com cartão de credito.
 
 = 0.8.2 = 29/07/2025
 * Fix: Melhoria no fluxo de pagamento via cartão de credito.
