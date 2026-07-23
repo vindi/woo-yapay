@@ -61,7 +61,6 @@ if (!class_exists('WC_Yapay_Intermediador_Creditcard_Gateway')) :
             if (is_admin()) {
                 add_action('woocommerce_update_options_payment_gateways_' . $this->id, array($this, 'process_admin_options'));
             }
-
         } // End __construct()
 
         // Build the administration fields for this specific Gateway
@@ -261,12 +260,12 @@ if (!class_exists('WC_Yapay_Intermediador_Creditcard_Gateway')) :
             if ($reseller_token) {
                 $params["reseller_token"] = $reseller_token;
             }
-            
+
             $params["token_account"] = $this->get_option("token_account");
             $params["finger_print"] = $_POST["finger_print"];
-            $params['transaction[free]'] = "WOOCOMMERCE_INTERMEDIADOR_v0.8.1";
+            $params['transaction[free]'] = "WOOCOMMERCE_INTERMEDIADOR_v0.8.2";
             $params["customer[name]"] = $_POST["billing_first_name"] . " " . $_POST["billing_last_name"];
-			$params["customer[cpf]"] = $_POST["billing_cpf"];
+            $params["customer[cpf]"] = $_POST["billing_cpf"];
 
             if (!isset($_POST["billing_persontype"]) && !isset($_POST["billing_cpf"]) || $_POST["billing_persontype"] == 2) {
                 $params["customer[trade_name]"] = $_POST["billing_first_name"] . " " . $_POST["billing_last_name"];
@@ -420,43 +419,68 @@ if (!class_exists('WC_Yapay_Intermediador_Creditcard_Gateway')) :
             $tcResponse = $tcRequest->requestData("v2/transactions/pay_complete", $params, $this->get_option("environment"), false);
 
             if ($tcResponse->message_response->message == "success") {
+                if (
+                    isset($tcResponse->data_response->transaction->status_id) &&
+                    $tcResponse->data_response->transaction->status_id == 6
+                ) {
 
-                $transactionParams["order_id"]          = (string)$tcResponse->data_response->transaction->order_number;
-                $transactionParams["transaction_id"]    = (int)$tcResponse->data_response->transaction->transaction_id;
-                $transactionParams["split_number"]      = (int)$tcResponse->data_response->transaction->payment->split;
-                $transactionParams["payment_method"]    = (int)$tcResponse->data_response->transaction->payment->payment_method_id;
-                $transactionParams["token_transaction"] = (string)$tcResponse->data_response->transaction->token_transaction;
+                    $transactionParams["order_id"]          = (string)$tcResponse->data_response->transaction->order_number;
+                    $transactionParams["transaction_id"]    = (int)$tcResponse->data_response->transaction->transaction_id;
+                    $transactionParams["split_number"]      = (int)$tcResponse->data_response->transaction->payment->split;
+                    $transactionParams["payment_method"]    = (int)$tcResponse->data_response->transaction->payment->payment_method_id;
+                    $transactionParams["token_transaction"] = (string)$tcResponse->data_response->transaction->token_transaction;
 
+                    $order->update_meta_data('yapay_transaction_data', serialize($transactionParams));
+                    $order->save();
 
-                $order->update_meta_data('yapay_transaction_data', serialize($transactionParams));
-                $order->save();
+                    $log = new WC_Logger();
+                    $log->add(
+                        "yapay-intermediador-transactions-save-",
+                        "Vindi NEW TRANSACTION SAVE : \n" .
+                            print_r($transactionParams, true) . "\n\n"
+                    );
 
-                $log = new WC_Logger();
-                $log->add(
-                    "yapay-intermediador-transactions-save-",
-                    "Vindi NEW TRANSACTION SAVE : \n" .
-                        print_r($transactionParams, true) . "\n\n"
-                );
+                    if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
+                        WC()->cart->empty_cart();
+                    } else {
+                        $woocommerce->cart->empty_cart();
+                    }
 
-                if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
-                    WC()->cart->empty_cart();
-                } else {
-                    $woocommerce->cart->empty_cart();
-                }
-                if (!isset($use_shipping)) {
-                    $use_shipping = isset($use_shipping);
-                }
-                if (defined('WC_VERSION') && version_compare(WC_VERSION, '2.1', '>=')) {
+                    if (!isset($use_shipping)) {
+                        $use_shipping = isset($use_shipping);
+                    }
+
                     return array(
                         'result'   => 'success',
                         'redirect' => $this->get_return_url($order)
-                        // 'redirect' => add_query_arg( array( 'use_shipping' => $use_shipping ), $order->get_checkout_payment_url( true ) )
                     );
                 } else {
+                    $transactionParams["order_id"]          = (string)$tcResponse->data_response->transaction->order_number;
+                    $transactionParams["transaction_id"]    = (int)$tcResponse->data_response->transaction->transaction_id;
+                    $transactionParams["split_number"]      = (int)$tcResponse->data_response->transaction->payment->split;
+                    $transactionParams["payment_method"]    = (int)$tcResponse->data_response->transaction->payment->payment_method_id;
+                    $transactionParams["token_transaction"] = (string)$tcResponse->data_response->transaction->token_transaction;
+
+                    $order->update_meta_data('yapay_transaction_data', serialize($transactionParams));
+                    $order->update_status('failed', __('Pagamento não aprovado na Vindi. Status: ', 'wc-yapay_intermediador-cc') .
+                        $tcResponse->data_response->transaction->status_id . ' - ' .
+                        $tcResponse->data_response->transaction->status_name);
+                    $order->save();
+
+                    $errorMsg = __("Pagamento processado mas não aprovado. Status: ", 'wc-yapay_intermediador-cc') .
+                        $tcResponse->data_response->transaction->status_id . " - " .
+                        $tcResponse->data_response->transaction->status_name;
+
+                    $this->add_error(array($errorMsg));
+
+                    if (defined('WC_VERSION') && version_compare(WC_VERSION, '3.0', '>=')) {
+                        WC()->session->set('order_awaiting_payment', false);
+                    } else {
+                        unset(WC()->session->order_awaiting_payment);
+                    }
+
                     return array(
-                        'result'   => 'success',
-                        'redirect' => $this->get_return_url($order)
-                        // 'redirect' => add_query_arg( array( 'order' => $order->id, 'key' => $order->order_key, 'use_shipping' => $use_shipping ), get_permalink( woocommerce_get_page_id( 'pay' ) ) )
+                        'result'   => 'failure'
                     );
                 }
             } else {
@@ -472,7 +496,20 @@ if (!class_exists('WC_Yapay_Intermediador_Creditcard_Gateway')) :
                 } else {
                     $errors[] = "<strong>Código:</strong> 9999 | <strong>Mensagem:</strong> Não foi possível finalizar o pedido. Tente novamente mais tarde!";
                 }
+
+                $order->update_status('failed', __('Erro na comunicação com Vindi', 'wc-yapay_intermediador-cc'));
+
                 $this->add_error($errors);
+
+                if (defined('WC_VERSION') && version_compare(WC_VERSION, '3.0', '>=')) {
+                    WC()->session->set('order_awaiting_payment', false);
+                } else {
+                    unset(WC()->session->order_awaiting_payment);
+                }
+
+                return array(
+                    'result'   => 'failure'
+                );
             }
         }
 
